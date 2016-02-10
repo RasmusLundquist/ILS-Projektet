@@ -45,10 +45,10 @@ features = ['request_text_contains_please',
             'requester_received_pizza']
 
 
-switcher = {'request_text_contains_please' : ('func1', ['please']),
-            'request_text_contains_uppercase' : ('default', ['please']),
-            'request_title_contains_help' : ('default', ['please']),
-            'request_title_contains_uppercase' : ('default', ['please']),
+switcher = {'request_text_contains_please' : ('containsPlease', ['please']),
+            'request_text_contains_uppercase' : ('caps', []),
+            'request_title_contains_help' : ('containsPlease', ['help']),
+            'request_title_contains_uppercase' : ('caps', []),
             'requester_account_age_in_days' : ('default', ['please']),
             'requester_days_since_first_post_on_raop' : ('default', ['please']),
             'requester_number_of_comments_on_reddit' : ('default', ['please']),
@@ -56,9 +56,9 @@ switcher = {'request_text_contains_please' : ('func1', ['please']),
             'requester_number_of_posts_on_reddit' : ('default', ['please']),
             'requester_number_of_posts_on_raop' : ('default', ['please']),
             'requester_number_of_subreddits' : ('default', ['please']),
-            'has_no_flair' : ('default', ['null']),
-            'has_shroom' : ('default', ['shroom']),
-            'has_pif' : ('default', ['PIF']),
+            'has_no_flair' : ('getUserFlair', ['null']),
+            'has_shroom' : ('getUserFlair', ['shroom']),
+            'has_pif' : ('getUserFlair', ['PIF']),
             'requester_username_contains_pizza' : ('default', ['please']),
             'week_before_christmas' : ('default', ['please']),
             'new_year_week' : ('default', ['please']),
@@ -138,6 +138,22 @@ class ProcessJson():
             return 1.0
         else:
             return 2.0
+            
+    def caps(self, *args):
+        countOfCapsChars = 0.0
+        countOfTotalChars = 0.0
+        for word in args[1].split(' '):
+            for i in range(0, len(word)):
+                if word[i].isupper():
+                    countOfCapsChars += 1
+                countOfTotalChars += 1
+
+        if(countOfTotalChars == 0):
+            result = 0
+        else:
+            result = countOfCapsChars / countOfTotalChars
+
+        return result
 
     def default(self, *args):
         arglen = len(args)
