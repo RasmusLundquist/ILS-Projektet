@@ -1,5 +1,7 @@
 import json
 
+import datetime
+
 UnlikelyFloat = -2446663.45452 #This number must not exist in JSon-data. It will be output to csv file in case of missing or misinterpreted values.
 
 fields =   ['request_text',
@@ -56,14 +58,14 @@ switcher = {'request_text_contains_please' : ('containsPlease', ['please']),
             'requester_number_of_posts_on_reddit' : ('default', ['please']),
             'requester_number_of_posts_on_raop' : ('default', ['please']),
             'requester_number_of_subreddits' : ('default', ['please']),
-            'has_no_flair' : ('getUserFlair', ['null']),
-            'has_shroom' : ('getUserFlair', ['shroom']),
-            'has_pif' : ('getUserFlair', ['PIF']),
+            'has_no_flair' : ('flairIsNone', ['null']),
+            'has_shroom' : ('flairIsShroom', ['shroom']),
+            'has_pif' : ('flairIsPIF', ['PIF']),
             'requester_username_contains_pizza' : ('default', ['please']),
             'week_before_christmas' : ('default', ['please']),
             'new_year_week' : ('default', ['please']),
             'week_before_thanksgiving' : ('default', ['please']),
-            'is_weekend' : ('default', ['please']),
+            'is_weekend' : ('isWeekend', []),
             'requester_received_pizza': ('default', ['please'])
             }
 
@@ -131,14 +133,28 @@ class ProcessJson():
                 numberOfTermsInText += 1
         return numberOfTermsInText
 
-    def getUserFlair(self, *args):
-        if args[0] == args[1]:
-            return 0.0
-        elif args[0] == args[1]:
+
+
+    def flairIsShroom(self, *args):
+        if args[1] == "shroom":
             return 1.0
         else:
-            return 2.0
-            
+            return 0.0
+
+    def flairIsPIF(self, *args):
+        if args[1] == "PIF":
+            return 1.0
+        else:
+            return 0.0
+
+    def flairIsNone(self, *args):
+        pif = self.flairIsPIF(*args)
+        shroom = self.flairIsShroom(*args)
+        if shroom == 0.0 and pif == 0.0:
+            return 1.0
+        else:
+            return 0.0
+
     def caps(self, *args):
         countOfCapsChars = 0.0
         countOfTotalChars = 0.0
@@ -154,6 +170,14 @@ class ProcessJson():
             result = countOfCapsChars / countOfTotalChars
 
         return result
+
+    def isWeekend(self, *args):
+        date = datetime.datetime.utcfromtimestamp(args[1])
+        if date.weekday() == 4 or date.weekday() == 5 or date.weekday() == 6:
+            return 1.0
+        else:
+            return 0.0
+
 
     def default(self, *args):
         arglen = len(args)
