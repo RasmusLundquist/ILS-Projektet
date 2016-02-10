@@ -56,9 +56,9 @@ switcher = {'request_text_contains_please' : ('func1', ['please']),
             'requester_number_of_posts_on_reddit' : ('default', ['please']),
             'requester_number_of_posts_on_raop' : ('default', ['please']),
             'requester_number_of_subreddits' : ('default', ['please']),
-            'has_no_flair' : ('default', ['please']),
-            'has_shroom' : ('default', ['please']),
-            'has_pif' : ('default', ['please']),
+            'has_no_flair' : ('default', ['null']),
+            'has_shroom' : ('default', ['shroom']),
+            'has_pif' : ('default', ['PIF']),
             'requester_username_contains_pizza' : ('default', ['please']),
             'week_before_christmas' : ('default', ['please']),
             'new_year_week' : ('default', ['please']),
@@ -123,9 +123,21 @@ class ProcessJson():
 
         self.out_file.close()
 
-    def func1(self, *args):
-        print args[0]
-        return 99.0
+    def containsPlease(self, *args):
+        checkString = args[1]
+        numberOfTermsInText = 0
+        for term in args[0]:
+            if term not in checkString:
+                numberOfTermsInText += 1
+        return numberOfTermsInText
+
+    def getUserFlair(self, *args):
+        if args[0] == args[1]:
+            return 0.0
+        elif args[0] == args[1]:
+            return 1.0
+        else:
+            return 2.0
 
     def default(self, *args):
         arglen = len(args)
