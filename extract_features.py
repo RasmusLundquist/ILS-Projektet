@@ -177,6 +177,13 @@ class ProcessJson():
             return 1.0
         else:
             return 0.0
+            
+    def wBeforeChristmas(self, *args):
+        dt = datetime.datetime
+        ut = dt.utcfromtimestamp(args[1])
+        for i in dt.timetuple(ut):
+            print i
+        return 0
 
 
     def default(self, *args):
