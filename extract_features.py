@@ -2,7 +2,21 @@ import json
 
 import datetime
 
-UnlikelyFloat = -2446663.45452 #This number must not exist in JSon-data. It will be output to csv file in case of missing or misinterpreted values.
+UnlikelyFloat = float('nan') #This number must not exist in JSon-data. It will be output to csv file in case of missing or misinterpreted values.
+
+month  =   ['placeholder',
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December']
 
 fields =   ['request_text',
             'request_text',
@@ -51,22 +65,22 @@ switcher = {'request_text_contains_please' : ('containsPlease', ['please']),
             'request_text_contains_uppercase' : ('caps', []),
             'request_title_contains_help' : ('containsPlease', ['help']),
             'request_title_contains_uppercase' : ('caps', []),
-            'requester_account_age_in_days' : ('default', ['please']),
-            'requester_days_since_first_post_on_raop' : ('default', ['please']),
-            'requester_number_of_comments_on_reddit' : ('default', ['please']),
-            'requester_number_of_comments_on_raop' : ('default', ['please']),
-            'requester_number_of_posts_on_reddit' : ('default', ['please']),
-            'requester_number_of_posts_on_raop' : ('default', ['please']),
-            'requester_number_of_subreddits' : ('default', ['please']),
+            'requester_account_age_in_days' : ('default', []),
+            'requester_days_since_first_post_on_raop' : ('default', []),
+            'requester_number_of_comments_on_reddit' : ('default', []),
+            'requester_number_of_comments_on_raop' : ('default', []),
+            'requester_number_of_posts_on_reddit' : ('default', []),
+            'requester_number_of_posts_on_raop' : ('default', []),
+            'requester_number_of_subreddits' : ('default', []),
             'has_no_flair' : ('flairIsNone', ['null']),
             'has_shroom' : ('flairIsShroom', ['shroom']),
             'has_pif' : ('flairIsPIF', ['PIF']),
-            'requester_username_contains_pizza' : ('default', ['please']),
-            'week_before_christmas' : ('default', ['please']),
-            'new_year_week' : ('default', ['please']),
-            'week_before_thanksgiving' : ('default', ['please']),
+            'requester_username_contains_pizza' : ('containsPlease', ['pizza']),
+            'week_before_christmas' : ('wBeforeChristmas', []),
+            'new_year_week' : ('nyWeek', []),
+            'week_before_thanksgiving' : ('wbThanksgiving', []),
             'is_weekend' : ('isWeekend', []),
-            'requester_received_pizza': ('default', ['please'])
+            'requester_received_pizza': ('default', [])
             }
 
 
@@ -129,7 +143,7 @@ class ProcessJson():
         checkString = args[1]
         numberOfTermsInText = 0
         for term in args[0]:
-            if term not in checkString:
+            if term in checkString:
                 numberOfTermsInText += 1
         return numberOfTermsInText
 
@@ -165,7 +179,7 @@ class ProcessJson():
                 countOfTotalChars += 1
 
         if(countOfTotalChars == 0):
-            result = 0
+            result = 0.0
         else:
             result = countOfCapsChars / countOfTotalChars
 
@@ -181,17 +195,42 @@ class ProcessJson():
     def wBeforeChristmas(self, *args):
         dt = datetime.datetime
         ut = dt.utcfromtimestamp(args[1])
-        for i in dt.timetuple(ut):
-            print i
-        return 0
+        (y, m, d, x1, x2, x3, x4, x5 ,x6) = dt.timetuple(ut)
+        
+        if month[m] == 'December' and d in range(17, 26):
+            return 1.0
+        
+        return 0.0
+    
+    def nyWeek(self, *args):
+        dt = datetime.datetime
+        ut = dt.utcfromtimestamp(args[1])
+        (y, m, d, x1, x2, x3, x4, x5 ,x6) = dt.timetuple(ut)
+        
+        if (month[m] == 'December' and d in range(24, 32)) or (month[m] == 'January' and d in range(1, 8)):
+            return 1.0
+        
+        return 0.0        
 
+    def wbThanksgiving(self, *args):
+        dt = datetime.datetime
+        ut = dt.utcfromtimestamp(args[1])
+        (y, m, d, x1, x2, x3, x4, x5 ,x6) = dt.timetuple(ut)
+        #Thanksgiving is celebrated on the fourth thursday in November and is four days long.
+        if ((month[m] == 'November') and (d in range(22, 31))) or ((month[m] == 'December') and (d == 1)):
+            return 1.0
+        
+        return 0.0
+    
 
     def default(self, *args):
-        arglen = len(args)
 
-        lastarg = args[arglen-1]
+        lastarg = args[-1]
 
         if(isinstance(lastarg, float)):
+            return lastarg
+        
+        if(isinstance(lastarg, int)):
             return lastarg
 
         if(isinstance(lastarg, bool)):
