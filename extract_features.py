@@ -130,10 +130,8 @@ class ProcessJson():
 
         finalrow = ''
         for entry in self.json_data:
-            for (field, feature) in zip(self.jsonFields, self.csvFeatures):
-                f = self.generateFunction(feature)
-                a = self.generateArgument(feature)
-                finalrow = finalrow + finalrow.join([str(float(f(a, entry[field])))]) + ','
+            #for (field, feature) in zip(self.jsonFields, self.csvFeatures):
+            finalrow = ','.join([str(float(self.generateFunction(feature)(self.generateArgument(feature), entry[field]))) for (field, feature) in zip(self.jsonFields, self.csvFeatures)])
             self.out_file.write('{}\n'.format(finalrow))
             finalrow=''
 
