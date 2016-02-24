@@ -65,4 +65,4 @@ data = [(-0.011382173000239493, 0.46951906633815665),
         (-0.02245951186557384, 0.15349713634412571)]
 
 plotData(data, 'blue')
-plt.gcf().savefig("correlation.png")
+plt.gcf().savefig("correlation2.png")
