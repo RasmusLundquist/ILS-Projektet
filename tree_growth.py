@@ -13,7 +13,7 @@ class TreeGrowth():
         
         self.maxDepth = 20
         
-        
+
     
     def getTreeGrowth(self):
         

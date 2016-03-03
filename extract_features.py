@@ -29,9 +29,6 @@ fields =   ['request_text',
             'requester_number_of_posts_at_request',
             'requester_number_of_posts_on_raop_at_request',
             'requester_number_of_subreddits_at_request',
-            'requester_user_flair',
-            'requester_user_flair',
-            'requester_user_flair',
             'requester_username',
             'unix_timestamp_of_request_utc',
             'unix_timestamp_of_request_utc',
@@ -50,9 +47,6 @@ features = ['request_text_contains_please',
             'requester_number_of_posts_on_reddit',
             'requester_number_of_posts_on_raop',
             'requester_number_of_subreddits',
-            'has_no_flair',
-            'has_shroom',
-            'has_pif',
             'requester_username_contains_pizza',
             'week_before_christmas',
             'new_year_week',
@@ -72,9 +66,6 @@ switcher = {'request_text_contains_please' : ('containsPlease', ['please']),
             'requester_number_of_posts_on_reddit' : ('default', []),
             'requester_number_of_posts_on_raop' : ('default', []),
             'requester_number_of_subreddits' : ('default', []),
-            'has_no_flair' : ('flairIsNone', ['null']),
-            'has_shroom' : ('flairIsShroom', ['shroom']),
-            'has_pif' : ('flairIsPIF', ['PIF']),
             'requester_username_contains_pizza' : ('containsPlease', ['pizza']),
             'week_before_christmas' : ('wBeforeChristmas', []),
             'new_year_week' : ('nyWeek', []),
@@ -145,27 +136,6 @@ class ProcessJson():
                 numberOfTermsInText += 1
         return numberOfTermsInText
 
-
-
-    def flairIsShroom(self, *args):
-        if args[1] == "shroom":
-            return 1.0
-        else:
-            return 0.0
-
-    def flairIsPIF(self, *args):
-        if args[1] == "PIF":
-            return 1.0
-        else:
-            return 0.0
-
-    def flairIsNone(self, *args):
-        pif = self.flairIsPIF(*args)
-        shroom = self.flairIsShroom(*args)
-        if shroom == 0.0 and pif == 0.0:
-            return 1.0
-        else:
-            return 0.0
 
     def caps(self, *args):
         countOfCapsChars = 0.0
