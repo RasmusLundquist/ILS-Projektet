@@ -8,12 +8,12 @@ class TreeGrowth():
         self.label = ""
         self.leftNode = TreeGrowth
         self.rightNode = TreeGrowth
-        self.testCond = [[][]]
+        self.testCond = [[],[]]
 
         
         self.maxDepth = 20
         
-        return None
+        
     
     def getTreeGrowth(self):
         
@@ -37,7 +37,7 @@ class TreeGrowth():
         
         for v in root.getTestCond(): #for each v in V. V should just be two grouped lists [[], []] with attributes
             for e in trainingRecords:
-                if root.testCond(e) == v: #sort the records for the child
+                if (root.testCond(e) == v): #sort the records for the child
                     Ev.append(e)
                     
             child = self._process(Ev, attributeSet) #grow tree further
@@ -74,7 +74,7 @@ class TreeGrowth():
     
     def testCond(self, trainingRecord):
         ###What's this functions use?
-        return None
+        return True
     
     def addChild(self, child, edgeLabel):
         if(edgeLabel == "rightNode"):
