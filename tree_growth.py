@@ -5,6 +5,11 @@ class TreeGrowth():
         
         self.trainingRecords = trainingRecords
         self.attributeSet = attributeSet
+        self.label = ""
+        self.leftNode = TreeGrowth
+        self.rightNode = TreeGrowth
+        self.testCond = 0
+
         
         self.maxDepth = 20
         
@@ -53,22 +58,29 @@ class TreeGrowth():
     def findBestSplit(self, trainingRecords, attributeSet):
         return None
 
-class CreateNode():
     
     def setLabel(self, label):
-        return None
+        self.label = label
+
+    def getLabel(self):
+        return self.label
     
     def setTestCond(self, testCond):
-        return None
+        self.testCond = testCond
     
     def getTestCond(self):
-        return [None, None]
+        return self.testCond
     
     def testCond(self, trainingRecord):
+        ###What's this functions use?
         return None
     
     def addChild(self, child, edgeLabel):
-        return None
+        if(edgeLabel == "rightNode"):
+            self.rightNode = child
+        elif(edgeLabel == "leftNode"):
+            self.leftNode = child
+
         
         
 """trainrec = [1,2,3,4,5]
