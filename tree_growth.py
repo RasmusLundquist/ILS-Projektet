@@ -8,7 +8,7 @@ class TreeGrowth():
         self.label = ""
         self.leftNode = TreeGrowth
         self.rightNode = TreeGrowth
-        self.testCond = 0
+        self.testCond = [[][]]
 
         
         self.maxDepth = 20
@@ -21,13 +21,14 @@ class TreeGrowth():
         
         
     def _process(self, trainingRecords, attributeSet):
-        
+        #this row is prolly not riht, regarding the params. Check this out, this is cause of the change to delete the class node, the tree should contain trainingrecords? And a attribute set?
         if self.stoppingCond(trainingRecords, attributeSet) == True:
-            leaf = CreateNode() #a node that either has a testCond(a list) or a class label, and a descendant list(two legs?)
+            leaf = TreeGrowth([],[]) #a node that either has a testCond(a list) or a class label, and a descendant list(two legs?)
             leaf.setLabel(self.classify(trainingRecords))
             return leaf
-        
-        root = CreateNode()
+
+        #This is the same as before the root should prolly contain trainingRecords and a attribute set?
+        root = TreeGrowth([],[])
         root.setTestCond(self.findBestSplit(trainingRecords, attributeSet))
         
         """let V = {v|v is a possible outcome of root.testCond } """
